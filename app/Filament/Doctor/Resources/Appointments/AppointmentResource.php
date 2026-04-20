@@ -65,7 +65,7 @@ class AppointmentResource extends Resource
                 ->group(static::$navigationGroup)
                 ->url(fn(): string => ListTodayAppointments::getUrl())
                 ->badge(
-                    Appointment::query()->where('doctor_id', $doctorId)->whereDate('appointment_date', today())->count(),
+                    Appointment::query()->where('doctor_id', $doctorId)->whereDate('appointment_date', today())->where('status','confirmed')->count(),
                     color: 'primary'
                 )
                 ->isActiveWhen(function (): bool {
@@ -89,7 +89,7 @@ class AppointmentResource extends Resource
             NavigationItem::make('Past Appointments')
                 ->group(static::$navigationGroup)
                 ->url(static::getUrl('past-appointments'))
-                ->badge(Appointment::query()->where('doctor_id', $doctorId)->where('appointment_date', '<', today())->count(),
+                ->badge(Appointment::query()->where('doctor_id', $doctorId)->where('appointment_date', '<=', today())->where('status','completed')->count(),
                     color: 'danger')
                 ->isActiveWhen(function (): bool {
                     $routeName = request()->route()?->getName() ?? '';

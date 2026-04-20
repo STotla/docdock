@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Doctor\Pages\AlltimeStatistics;
+use App\Filament\Doctor\Pages\MonthRangeStatistics;
+use App\Filament\Doctor\Pages\TodayStatistics;
 use App\Filament\Doctor\Widgets\DoctorStatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -41,8 +44,10 @@ class DoctorPanelProvider extends PanelProvider
 
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\Filament\Doctor\Resources')
             ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\Filament\Doctor\Pages')
-            ->pages([
-                Dashboard::class,
+            ->pages([                   
+                 AlltimeStatistics::class,
+                 TodayStatistics::class,
+                 MonthRangeStatistics::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Doctor/Widgets'), for: 'App\Filament\Doctor\Widgets')
            

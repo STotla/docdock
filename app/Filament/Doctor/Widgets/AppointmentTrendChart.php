@@ -19,7 +19,10 @@ class AppointmentTrendChart extends ChartWidget
 
    protected ?string $maxHeight = '300px';
 
-   
+   public static function canView(): bool
+    {
+        return request()->routeIs('filament.doctor.pages.month-range-statistics');
+    }
    public function getHeading(): string
 {
     

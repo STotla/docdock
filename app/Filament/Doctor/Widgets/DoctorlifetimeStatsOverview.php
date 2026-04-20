@@ -10,12 +10,16 @@ class DoctorlifetimeStatsOverview extends StatsOverviewWidget
 {
     protected static ?int $sort = 2;
     protected  ?string $heading="Lifetime Appointments Statistics";
+    public static function canView(): bool
+{
+    return request()->routeIs('filament.doctor.pages.alltime-statistics');
+}
  
     protected function getStats(): array
     {
         $query = auth()->user()->doctor->appointments();
         $currency= auth()->user()->doctor->currency;
-        $totalAppointments = (clone $query)->count();
+        $totalAppointments = (clone $query)->where('status','completed')->count();
  
         $totalPatients = (clone $query)
             ->distinct('user_id')
@@ -26,7 +30,7 @@ class DoctorlifetimeStatsOverview extends StatsOverviewWidget
             ->sum('amount');
  
         return [
-            Stat::make('Total Appointments', number_format($totalAppointments))
+            Stat::make('Total Appointments Completed', number_format($totalAppointments))
             ->color('primary')
                 ->description('All-time bookings')
                 ->descriptionIcon('heroicon-m-calendar')

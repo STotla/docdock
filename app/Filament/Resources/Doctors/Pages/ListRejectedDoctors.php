@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\DoctorResource\Pages;
+namespace App\Filament\Resources\Doctors\Pages;
 
 use App\Filament\Resources\Doctors\DoctorResource;
 use App\Filament\Resources\Doctors\Pages\ListDoctors;

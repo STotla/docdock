@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Doctors;
 
-use App\Filament\Resources\DoctorResource\Pages\ListApprovedDoctors;
-use App\Filament\Resources\DoctorResource\Pages\ListDraftDoctors;
-use App\Filament\Resources\DoctorResource\Pages\ListRejectedDoctors;
-use App\Filament\Resources\DoctorResource\Pages\ListUnderReviewDoctors;
+use App\Filament\Resources\Doctors\Pages\ListApprovedDoctors;
+use App\Filament\Resources\Doctors\Pages\ListDraftDoctors;
+use App\Filament\Resources\Doctors\Pages\ListRejectedDoctors;
+use App\Filament\Resources\Doctors\Pages\ListUnderReviewDoctors;
 use App\Filament\Resources\Doctors\Pages\EditDoctor;
 use App\Filament\Resources\Doctors\Pages\ListDoctors;
 use App\Filament\Resources\Doctors\Pages\ViewDoctor;

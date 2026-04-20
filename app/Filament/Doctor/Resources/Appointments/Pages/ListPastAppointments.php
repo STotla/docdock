@@ -9,7 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 use UnitEnum;
 use Illuminate\Database\Eloquent\Builder;
 
-class ListPastAppointments extends ListRecords
+class ListPastAppointments extends ListAppointments
 {
     protected static string $resource = AppointmentResource::class;
 
@@ -19,8 +19,8 @@ class ListPastAppointments extends ListRecords
     {
         $doctor = auth()->user()->doctor;
         return parent::getTableQuery()
-                    ->where('doctor_id',$doctor->id)
-                 ->where('appointment_date', '<', today());
+                 ->whereDate('appointment_date', '<=', today())
+                 ->where('status','completed');
      }
     protected function getHeaderActions(): array
     {

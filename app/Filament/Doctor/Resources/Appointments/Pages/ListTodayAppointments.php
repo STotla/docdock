@@ -31,8 +31,9 @@ class ListTodayAppointments extends ListAppointments
     {
          $doctor = auth()->user()->doctor;
         return parent::getTableQuery()
-                    ->where('doctor_id',$doctor->id)
-                 ->where('appointment_date', today());
+                 ->whereDate
+                 ('appointment_date', today())
+                 ->where('status','confirmed');
       
      }
    
