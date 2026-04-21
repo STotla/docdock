@@ -67,6 +67,11 @@ class DoctorPanelProvider extends PanelProvider
                 'role:doctor',
                 'doctorGate',
             ])
+            ->navigationGroups([
+            'Analytics',    
+            'Schedule',      
+            'Appointments',      
+        ])
               ->databaseNotifications() ;
     }
 }

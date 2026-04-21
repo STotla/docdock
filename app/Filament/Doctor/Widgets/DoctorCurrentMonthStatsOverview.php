@@ -23,19 +23,30 @@ class DoctorCurrentMonthStatsOverview extends StatsOverviewWidget
     {
         return request()->routeIs('filament.doctor.pages.month-range-statistics');
     }
-
-    private function updateDatesFromFilter(): void
+private function updateDatesFromFilter(): void
     {
-    $filters = $this->filters ?? $this->pageFilters ?? [];
-    
-    $filterValue = $filters['month_filter'] ?? now()->format('Y-m');
-    
-    $start = \Illuminate\Support\Carbon::parse($filterValue)->startOfMonth();
-    $end = $start->copy()->endOfMonth();
-
-    $this->startDate = $start->toDateString();
-    $this->endDate   = $end->toDateString();
+        /** 
+         * FIX: Explicitly check for both $pageFilters (v4) and $filters (v3/v4 mismatch)
+         * This prevents the "blank screen" crash when changing values.
+         */
+        $appliedFilters = $this->pageFilters ?? $this->filters ?? [];
+        
+        $filterValue = $appliedFilters['month_filter'] ?? now()->format('Y-m');
+        
+        
+        try {
+            // Use Carbon's safe parsing
+            $start = \Illuminate\Support\Carbon::parse($filterValue)->startOfMonth();
+            $this->startDate = $start->toDateString();
+            $this->endDate   = $start->copy()->endOfMonth()->toDateString();
+        } catch (\Exception $e) {
+            // Emergency fallback to prevent white screen
+            $this->startDate = now()->startOfMonth()->toDateString();
+            $this->endDate   = now()->endOfMonth()->toDateString();
+        }
     }
+
+
 
     private function periodQueries(): array
     {

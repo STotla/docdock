@@ -41,9 +41,7 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
-            ->widgets([
-                AccountWidget::class,
-            ])
+            
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -55,10 +53,17 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+
             ->authMiddleware([
                 'role:admin',
                 Authenticate::class,
-            ]);
+            ])
+             ->navigationGroups([
+            'Dashboard',    
+            'Doctors',      
+            'Specilizations',      
+        ])
+            ;
              
     }
 }

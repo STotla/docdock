@@ -17,7 +17,7 @@ class MonthRangeStatistics extends Dashboard
     protected static ?string $navigationLabel = 'Monthly Stats';
     protected static string|UnitEnum|null $navigationGroup = 'Analytics';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
     protected static string $routePath = '/montly-statistics';
 
     public function filtersForm(Schema $schema): Schema

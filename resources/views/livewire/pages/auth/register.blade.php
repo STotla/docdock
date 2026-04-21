@@ -29,10 +29,10 @@ new #[Layout('layouts.guest')] class extends Component
         $validated['password'] = Hash::make($validated['password']);
 
         event(new Registered($user = User::create($validated)));
-
+         $user->assignRole('patient');
         Auth::login($user);
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('patientDashboard', absolute: false), navigate: true);
     }
 }; ?>
 
