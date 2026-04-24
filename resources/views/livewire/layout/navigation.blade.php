@@ -35,7 +35,7 @@ new class extends Component {
 
                     @if(auth()->check())
                         <x-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')" wire:navigate
-                            class="text-xs font-black uppercase tracking-widest px-4 text-blue-400">
+                            class="text-xs font-black uppercase tracking-widest px-4 text-primary-400">
                             {{ __('My Dashboard') }}
                         </x-nav-link>
                     @endif
@@ -58,7 +58,7 @@ new class extends Component {
                             contentClasses="py-2 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
                             <x-slot name="trigger">
                                 <button class="flex items-center gap-3 px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-2xl hover:border-slate-600 transition-all group">
-                                    <div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-black text-white ring-2 ring-slate-800 group-hover:ring-blue-500/20">
+                                    <div class="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center text-xs font-black text-white ring-2 ring-slate-800 group-hover:ring-primary-500/20">
                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                     </div>
                                     <div class="text-start hidden lg:block">
@@ -96,7 +96,7 @@ new class extends Component {
                 @else
                     <div class="hidden sm:flex items-center gap-2">
                         <a href="{{ route('login') }}" wire:navigate class="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white px-4">Sign In</a>
-                        <a href="{{ route('register') }}" wire:navigate class="bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-black uppercase tracking-widest px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-900/20">Join Now</a>
+                        <a href="{{ route('register') }}" wire:navigate class="bg-primary-600 hover:bg-primary-500 text-white text-[10px] font-black uppercase tracking-widest px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-primary-900/20">Join Now</a>
                     </div>
                 @endif
 
@@ -122,7 +122,7 @@ new class extends Component {
             <x-responsive-nav-link :href="route('doctors.search')" :active="request()->routeIs('doctors.search')" wire:navigate class="rounded-xl">
                 {{ __('Find a Doctor') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')" wire:navigate class="rounded-xl text-blue-400">
+            <x-responsive-nav-link :href="route('patient.dashboard')" :active="request()->routeIs('patient.dashboard')" wire:navigate class="rounded-xl text-primary-400">
                 {{ __('Patient Dashboard') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('doctor.portal')" wire:navigate class="rounded-xl">
@@ -133,7 +133,7 @@ new class extends Component {
         @if(auth()->check())
             <div class="pt-4 pb-4 border-t border-slate-800 bg-slate-900/50">
                 <div class="px-6 flex items-center gap-3 mb-6">
-                    <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center font-black text-white">
+                    <div class="h-10 w-10 rounded-full bg-primary-600 flex items-center justify-center font-black text-white">
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                     </div>
                     <div>

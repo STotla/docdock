@@ -26,6 +26,9 @@ use Filament\Schemas\Schema;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Dotswan\MapPicker\Fields\Map;
+use Fahiem\FilamentPinpoint\Pinpoint;
+use Filament\Schemas\Components\Grid;
 
 class CompleteProfile extends Page implements HasForms
 {
@@ -43,14 +46,15 @@ class CompleteProfile extends Page implements HasForms
 
     public function mount(): void
     {
+
         $user = auth()->user();
 
         abort_unless($user && $user->hasRole('doctor'), 403);
 
         $this->doctor = Doctor::firstOrCreate(
             ['user_id' => $user->id],
-                        ['specialization_id' => 1],
-                                ['profile_status' => 'pending'],
+            ['specialization_id' => 1],
+            ['profile_status' => 'pending'],
         );
 
         $this->form->fill([
@@ -65,6 +69,8 @@ class CompleteProfile extends Page implements HasForms
             'clinic_address' => $this->doctor->clinic_address,
             'city' => $this->doctor->city,
             'state' => $this->doctor->state,
+            'latitude' => $this->doctor->latitude,
+            'longitude' => $this->doctor->longitude,
             'consultation_fee' => $this->doctor->consultation_fee,
             'currency' => $this->doctor->currency ?? 'USD',
             'certificates' => $this->doctor->certificates
@@ -87,6 +93,7 @@ class CompleteProfile extends Page implements HasForms
 
     public function form(Schema $schema): Schema
     {
+
         return $schema
             ->schema([
                 Section::make('Profile')
@@ -130,41 +137,56 @@ class CompleteProfile extends Page implements HasForms
                             ->rows(5)
                             ->required(),
                         TextInput::make('phone')
+                            ->mask('99999-99999')
+                            ->placeholder('00000-00000')
+                            ->prefix('+91')
                             ->tel()
                             ->maxLength(50),
                     ])
                     ->columns(2),
                 Section::make('Clinic Information')
                     ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                Pinpoint::make('location')
+                                    ->label('Location')
+                                    ->defaultLocation($this->doctor->latitude ?? 20.5937, $this->doctor->longitude ?? 78.9629)
+                                    ->shortAddressField('clinic_address')
+                                    ->cityField('city')
+                                    ->provinceField('state')
+                                    ->latField('latitude')
+                                    ->lngField('longitude')
+                                    ->columnSpan(1),
+                                Grid::make(1)
+                                    ->schema([
+                                        TextInput::make('clinic_name')
+                                            ->maxLength(255)
+                                            ->columnSpan(2)
+                                            ->required(),
+                                        Textarea::make('clinic_address')
+                                            ->rows(3)
+                                            ->columnSpan(2)
+                                            ->required(),
+                                        TextInput::make('state')
+                                            ->label('State')
+                                            ->columnSpan(1)
+                                            ->required(),
+                                        TextInput::make('city')
+                                            ->label('City')
+                                            ->columnSpan(1)
+                                            ->required(),
 
-                        TextInput::make('clinic_name')
-                            ->maxLength(255)
-                            ->required(),
-
-                        Textarea::make('clinic_address')
-                            ->rows(3)
-                            ->required(),
-
-                        Select::make('state')
-                            ->label('State')
-                            ->options(fn() => $this->getStatesByCountry('IN'))
-                            
-                            ->searchable()
-                            ->preload()
-                            ->live()
-                            ->afterStateUpdated(fn(Set $set) => $set('city', null))
-                            ->required(),
-
-                        Select::make('city')
-                            ->options(fn(Get $get) => $this->getCitiesByState($get('state')))
-                            ->searchable()
-                            ->preload()
-                            ->disabled(fn(Get $get) => blank($get('state')))
-                            ->required(),
-
-
-                    ])
-                    ->columns(2),
+                                        TextInput::make('latitude')
+                                            ->label('Latitude')
+                                            ->extraAttributes(['style' => 'display: none;']),
+                                        TextInput::make('longitude')
+                                            ->label('Longitude')
+                                            ->extraAttributes(['style' => 'display: none;']),
+                                    ])
+                                    ->columnSpan(1)
+                                    ->columns(2),
+                            ]),
+                    ]),
 
                 Section::make('Consultation Information')
                     ->schema([
@@ -176,11 +198,9 @@ class CompleteProfile extends Page implements HasForms
 
                         Select::make('currency')
                             ->options([
-                                'USD' => 'USD',
+
                                 'INR' => 'INR',
-                                'EUR' => 'EUR',
-                                'GBP' => 'GBP',
-                                'JPY' => 'JPY',
+
                             ])
                             ->default('INR')
                             ->required(),
@@ -208,10 +228,12 @@ class CompleteProfile extends Page implements HasForms
 
                                 DatePicker::make('issued_date')
                                     ->label('Date of Issue')
+                                    ->native(false)
                                     ->required(),
 
                                 DatePicker::make('expiry_date')
                                     ->label('Date of Expiry')
+                                    ->native(false)
                                     ->required()
                                     ->afterOrEqual('issued_date'),
                             ])
@@ -244,13 +266,12 @@ class CompleteProfile extends Page implements HasForms
         ]);
 
         $this->syncCertificates($certificates);
-
     }
 
     public function submitForReview(): void
     {
         $data = $this->form->getState();
-        $data['profile_status']="under review";
+        $data['profile_status'] = "under review";
         $certificates = $data['certificates'] ?? [];
         unset($data['certificates']);
 
@@ -263,7 +284,7 @@ class CompleteProfile extends Page implements HasForms
                 ->send();
             return;
         }
-     
+
 
         $this->doctor->update([
             ...$data,
@@ -321,30 +342,27 @@ class CompleteProfile extends Page implements HasForms
 
     public function getStatesByCountry(string $countryCode): array
     {
-        $country = Country::where('iso2',$countryCode)->first();
-        $states= $country->states;
+        $country = Country::where('iso2', $countryCode)->first();
+        $states = $country->states;
         foreach ($states as $state) {
             $stateNames[$state->name] = Str::ucfirst($state->name);
         }
         return $stateNames ?? [];
     }
 
-    public function getCitiesByState( $stateName): array
-    {   
-       
-        if(!$stateName){
+    public function getCitiesByState($stateName): array
+    {
+
+        if (!$stateName) {
             return [];
         }
-       $stateObject = State::where('name', $stateName)->first();
-       $cities = $stateObject->cities;
+        $stateName = strtolower($stateName);
+
+        $stateObject = State::where('name', $stateName)->first();
+        $cities = $stateObject->cities;
         foreach ($cities as $city) {
             $cityNames[$city->name] = Str::ucfirst($city->name);
         }
         return $cityNames ?? [];
-
     }
-
-        
-
-
 }

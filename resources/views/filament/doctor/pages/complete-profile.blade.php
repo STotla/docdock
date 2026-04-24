@@ -1,32 +1,57 @@
 <?php 
-$disabled = in_array($doctor->profile_status,['approved','under review']);
+$disabled = in_array($doctor->profile_status, ['approved', 'under review']);
 ?>
 <x-filament-panels::page>
-    @if ($doctor->profile_status === 'rejected' && $doctor->admin_note)
-        <div class="rounded-lg border border-danger-300 bg-danger-50 p-4 mb-4">
-            <div class="font-semibold text-danger-700">Rejected</div>
-            <div class="text-sm text-danger-700 mt-1">{{ $doctor->admin_note }}</div>
-        </div>
+   <div class="space-y-6">
+    {{-- DRAFT STATUS --}}
+    @if ($doctor->profile_status === 'draft')
+        <x-filament::section
+            icon="heroicon-m-pencil-square"
+            icon-color="info"
+            heading="Profile in Draft"
+        >
+            <div class="text-sm text-gray-600 dark:text-gray-400">
+                Your profile is currently in the <strong>draft</strong> stage. Please complete all required fields and submit it for review to activate your account.
+            </div>
+        </x-filament::section>
     @endif
 
-    @if ($doctor->profile_status === 'under review')
-        <div class="mb-4 rounded-lg border border-yellow-300 bg-yellow-50 p-4">
-    <div class="font-semibold text-yellow-800">Submitted</div>
-    <div class="mt-1 text-sm text-yellow-800">Your profile is under review.</div>
-</div>
+    {{-- REJECTED STATUS --}}
+    @if ($doctor->profile_status === 'rejected')
+        <x-filament::section
+            icon="heroicon-m-x-circle"
+            icon-color="danger"
+            heading="Profile Rejected"
+        >
+            <div class="text-sm text-gray-600 dark:text-gray-400">
+                <span class="font-bold text-danger-600">Reason:</span> 
+                {{ $doctor->admin_note ?? 'Please review your information and try again.' }}
+            </div>
+        </x-filament::section>
     @endif
+
+    {{-- UNDER REVIEW STATUS --}}
+    @if ($doctor->profile_status === 'under review')
+        <x-filament::section
+            icon="heroicon-m-clock"
+            icon-color="warning"
+            heading="Application Submitted"
+        >
+            <div class="text-sm text-gray-600 dark:text-gray-400">
+                Your profile is currently <strong>under review</strong>. Our team will verify your details shortly.
+            </div>
+        </x-filament::section>
+    @endif
+</div>
+
 
     {{ $this->form }}
 
     <div class="mt-6 flex flex-wrap gap-3">
-        <x-filament::button wire:click="saveDraft" wire:loading.attr="disabled"  
-         :disabled="$disabled"
-        >
+        <x-filament::button wire:click="saveDraft" wire:loading.attr="disabled" :disabled="$disabled">
             Save Draft
         </x-filament::button>
-        <x-filament::button wire:click="submitForReview" wire:loading.attr="disabled" 
-        :disabled="$disabled"
-        >
+        <x-filament::button wire:click="submitForReview" wire:loading.attr="disabled" :disabled="$disabled">
             Submit for Review
         </x-filament::button>
 

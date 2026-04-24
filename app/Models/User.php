@@ -11,6 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\HasDatabaseNotifications;
 use Illuminate\Support\Carbon;
+use Laravel\Cashier\Subscription;
 
 class User extends Authenticatable
 {
@@ -80,6 +81,7 @@ class User extends Authenticatable
     public function reviews(){
         return $this->hasMany(Review::class);
     }
+
 
     
 }

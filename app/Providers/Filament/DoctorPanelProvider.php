@@ -31,6 +31,11 @@ class DoctorPanelProvider extends PanelProvider
             ->id('doctor')
             ->path('doctor')
             ->login()
+           
+            ->spa()
+            ->sidebarCollapsibleOnDesktop()
+            ->unsavedChangesAlerts()
+            ->maxContentWidth('full')
             ->colors([
                 'danger' => Color::Red,
                 'gray' => Color::Zinc,
@@ -41,7 +46,7 @@ class DoctorPanelProvider extends PanelProvider
             ])
             ->brandName('DocDock - Doctor Panel')
             ->darkMode(true)
-
+            ->databaseTransactions()
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\Filament\Doctor\Resources')
             ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\Filament\Doctor\Pages')
             ->pages([                   
@@ -71,7 +76,9 @@ class DoctorPanelProvider extends PanelProvider
             'Analytics',    
             'Schedule',      
             'Appointments',      
+            'Settings',
         ])
-              ->databaseNotifications() ;
+              ->databaseNotifications() 
+              ;
     }
 }

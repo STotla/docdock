@@ -43,7 +43,7 @@ class DoctorSignupController extends Controller
         });
 
          auth()->login($user);
-            return redirect()->route('filament.doctor.pages.dashboard');
+            return redirect()->route('filament.doctor.pages.complete-profile');
 
         // Redirect to a success page or dashboard
     }

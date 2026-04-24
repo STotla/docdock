@@ -13,6 +13,7 @@ Route::get('/', Welcome::class)->name('welcome');
 Route::get('/doctor-portal', \App\Livewire\DoctorPortal::class)->name('doctor.portal');
 Route::get('/find-doctors', SearchDoctors::class)->name('doctors.search');
 Route::get('/doctors',Index::class)->name('doctors.index');
+
 Route::get('/doctors/{doctor}', \App\Livewire\Patient\Doctors\Show::class)->name('doctors.show');
 Route::get('/book-appointment/{doctor}/{date}', \App\Livewire\Patient\BookAppointment::class)->middleware(['auth'])->name('patient.appointments.book');
 Route::get('/my-appointments', \App\Livewire\Patient\Appointments\Index::class)->middleware(['auth'])->name('patient.appointments');

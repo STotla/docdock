@@ -63,7 +63,7 @@ class AdminPanelProvider extends PanelProvider
             'Doctors',      
             'Specilizations',      
         ])
-            ;
+         ->databaseNotifications();
              
     }
 }

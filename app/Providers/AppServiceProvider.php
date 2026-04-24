@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Events\WebhookReceived;
 use Filament\Notifications\Livewire\DatabaseNotifications;
-
+use Illuminate\Support\Facades\DB;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,5 +29,14 @@ class AppServiceProvider extends ServiceProvider
             WebhookReceived::class,
             StripeWebhookListener::class
         );
+        if (config('database.default') === 'sqlite') {
+        $db = DB::connection()->getPdo();
+        
+        $db->sqliteCreateFunction('acos', 'acos', 1);
+        $db->sqliteCreateFunction('cos', 'cos', 1);
+        $db->sqliteCreateFunction('sin', 'sin', 1);
+        $db->sqliteCreateFunction('radians', 'deg2rad', 1);
+        
+    }
     }
 }

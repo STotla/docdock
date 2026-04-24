@@ -26,7 +26,7 @@ class SpecializationsSeeder extends Seeder
         ];
 
         foreach ($specializations as $specialization) {
-            \App\Models\Specialization::firstOrCreate(['name' => $specialization, 'is_active' => true]);
+            \App\Models\Specialization::firstOrCreate(['name' => $specialization,  'icon' => 'doctor-icons/'.$specialization.'.png', 'is_active' => true,'description' => 'Description for '.$specialization]);
         }
     }
 }

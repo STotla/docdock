@@ -11,12 +11,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->use([
+            \App\Http\Middleware\RegisterDatabaseFunctions::class,
+        ]);
+
         $middleware->validateCsrfTokens(except: [
-            'stripe/*', 
+            'stripe/*',
         ]);
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureRole::class,
-            'doctorGate' => \App\Http\Middleware\EnsureDoctorApprovedOrCompletingProfile::class,
+            'doctorGate' => \App\Http\Middleware\EnsureDoctorApprovedAndSubscribed::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
